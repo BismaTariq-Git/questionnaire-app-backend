@@ -12,16 +12,17 @@ connectDB();
 
 const app = express();
 
-// Set up CORS options
-const corsOptions = {
-  origin: [
-    'http://localhost:3000', // Localhost for development
-    'https://questionnaire-app-backend.vercel.app', // Vercel domain for production
-  ],
-  methods: ['GET', 'POST', 'OPTIONS'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type'], // Allowed headers for requests
-};
 
+const corsOptions = {
+    origin: [
+      'http://localhost:3000', 
+      'https://questionnaire-app-backend.vercel.app', 
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow required headers
+    credentials: true, // Allow cookies if needed
+  };
+  
 // Middleware to log requests (for debugging)
 app.use((req, res, next) => {
   console.log(`${req.method} request to ${req.url}`);
