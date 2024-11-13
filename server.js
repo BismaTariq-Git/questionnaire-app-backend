@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
 import bodyParser from 'body-parser';
 import connectDB from './config/db.js';
 import surveyRoutes from './routes/surveyroutes.js';
@@ -12,43 +11,26 @@ connectDB();
 
 const app = express();
 
+// Middleware to parse JSON requests
+app.use(bodyParser.json());
 
-const corsOptions = {
-    origin: [
-      'http://localhost:3000', 
-      'https://questionnaire-app-backend.vercel.app', 
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow required headers
-    credentials: true, // Allow cookies if needed
-  };
-  
+// Set CORS headers directly for all responses
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Middleware to log requests (for debugging)
 app.use((req, res, next) => {
   console.log(`${req.method} request to ${req.url}`);
   next();
 });
-
-// Middleware to set Content Security Policy (CSP)
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'none'; " +
-    "script-src 'self' https://vercel.live https://cdnjs.cloudflare.com; " +
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-    "img-src 'self' data: https://images.unsplash.com; " +
-    "font-src 'self' https://fonts.gstatic.com; " +
-    "connect-src 'self' https://questionnaire-app-backend.vercel.app;"
-  );
-  next();
-});
-
-// Apply CORS middleware globally
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Allow OPTIONS for all routes
-
-// Middleware to parse JSON
-app.use(bodyParser.json());
 
 // Routes
 app.use('/api', surveyRoutes);
