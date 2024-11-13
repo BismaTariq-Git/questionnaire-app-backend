@@ -17,7 +17,8 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'http://localhost:3001',
-    'https://questionnaire-app-backend.vercel.app'  // Vercel URL
+    'https://questionnaire-app-frontend.vercel.app',  // Replace with your frontend URL
+    'https://questionnaire-app-backend.vercel.app'    // Replace with the backend URL provided by Vercel
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
@@ -25,7 +26,7 @@ const corsOptions = {
 
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight requests globally
+app.options('*', cors(corsOptions));  // Handle preflight requests globally
 
 // Middleware for logging requests
 app.use((req, res, next) => {
@@ -33,10 +34,8 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 // Middleware to parse JSON requests
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // API Routes
 app.use('/api', surveyRoutes);
@@ -46,9 +45,5 @@ app.get('/', (req, res) => {
   res.send('Server is up and running!');
 });
 
-// Start the server
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
+// Export the Express app as a serverless function
+export default app;
