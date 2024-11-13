@@ -11,39 +11,59 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
-// Set up CORS options
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://questionnaire-app-frontend.vercel.app',  // Replace with your frontend URL
-    'https://questionnaire-app-backend.vercel.app'    // Replace with the backend URL provided by Vercel
-  ],
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-};
+    origin: [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'https://questionnaire-app-backend.vercel.app'  // Add Vercel URL
+    ],
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  };
+  
+  // Apply CORS middleware
+  app.use(cors(corsOptions));
+  
 
-// Apply CORS middleware globally
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));  // Handle preflight requests globally
-
-// Middleware for logging requests
+// Middleware to log requests (for debugging)
 app.use((req, res, next) => {
   console.log(`${req.method} request to ${req.url}`);
   next();
 });
 
-// Middleware to parse JSON requests
+// Middleware to set Content Security Policy (CSP)
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'none'; " +
+    "script-src 'self' https://vercel.live https://cdnjs.cloudflare.com; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "img-src 'self' data: https://images.unsplash.com; " +
+    "font-src 'self' https://fonts.gstatic.com; " +
+    "connect-src 'self' https://questionnaire-app-backend.vercel.app;"
+  );
+  next();
+});
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
+
+
+app.options('*', cors(corsOptions)); // Allow OPTIONS for all routes
+
+// Middleware to parse JSON
 app.use(bodyParser.json());
 
-// API Routes
+// Routes
 app.use('/api', surveyRoutes);
 
-// Health Check Route
+
 app.get('/', (req, res) => {
   res.send('Server is up and running!');
 });
 
-// Export the Express app as a serverless function
-export default app;
+// Start server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
