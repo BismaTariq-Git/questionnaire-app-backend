@@ -11,12 +11,19 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
 const corsOptions = {
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
-    methods: ['GET', 'POST'], 
-    allowedHeaders: ['Content-Type'] 
-};
+    origin: [
+      'http://localhost:3000', 
+      'http://localhost:3001', 
+      'https://questionnaire-app-backend.vercel.app'  // Add Vercel URL
+    ],
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  };
+  
+  // Apply CORS middleware
+  app.use(cors(corsOptions));
+  
 
 // Middleware to log requests (for debugging)
 app.use((req, res, next) => {
