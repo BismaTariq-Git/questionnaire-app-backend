@@ -6,37 +6,40 @@ import surveyRoutes from './routes/surveyroutes.js';
 
 dotenv.config();
 
-// Connect to MongoDB
-connectDB();
-
+// Initialize Express app
 const app = express();
+
+// Middleware to set timeout for requests
 app.use((req, res, next) => {
-    res.setTimeout(10000, () => {  // Set the timeout to 10 seconds
-      console.log('Request timed out');
-      res.status(504).send('Request timed out');
-    });
-    next();
+  res.setTimeout(10000, () => {
+    console.log('Request timed out');
+    res.status(504).send('Request timed out');
   });
-  
+  next();
+});
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 
-// CORS Middleware - add this block directly in server.js
+// CORS Middleware
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
   res.header('Access-Control-Allow-Credentials', 'true');
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);  // Handle preflight requests
+    return res.sendStatus(200); // Handle preflight requests
   }
   next();
 });
 
-// Middleware to log requests (for debugging)
+// Logging middleware
 app.use((req, res, next) => {
-  console.log(`${req.method} request to ${req.url}`);
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`${req.method} ${req.url} took ${duration}ms`);
+  });
   next();
 });
 
@@ -49,6 +52,8 @@ app.get('/', (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 });
