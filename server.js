@@ -10,6 +10,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.use((req, res, next) => {
+    res.setTimeout(10000, () => {  // Set the timeout to 10 seconds
+      console.log('Request timed out');
+      res.status(504).send('Request timed out');
+    });
+    next();
+  });
+  
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
