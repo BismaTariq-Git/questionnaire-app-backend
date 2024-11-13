@@ -11,19 +11,16 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// Set up CORS options
 const corsOptions = {
-    origin: [
-      'http://localhost:3000', 
-      'http://localhost:3001', 
-      'https://questionnaire-app-backend.vercel.app'  // Add Vercel URL
-    ],
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
-  };
-  
-  // Apply CORS middleware
-  app.use(cors(corsOptions));
-  
+  origin: [
+    'http://localhost:3000', // Localhost for development
+    'https://questionnaire-app-backend.vercel.app', // Vercel domain for production
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'], // Allowed HTTP methods
+  allowedHeaders: ['Content-Type'], // Allowed headers for requests
+};
 
 // Middleware to log requests (for debugging)
 app.use((req, res, next) => {
@@ -45,10 +42,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Apply CORS middleware
+// Apply CORS middleware globally
 app.use(cors(corsOptions));
-
-
 app.options('*', cors(corsOptions)); // Allow OPTIONS for all routes
 
 // Middleware to parse JSON
@@ -56,7 +51,6 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api', surveyRoutes);
-
 
 app.get('/', (req, res) => {
   res.send('Server is up and running!');
