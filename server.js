@@ -13,7 +13,7 @@ const app = express();
 
 // Middleware to handle request timeout
 app.use((req, res, next) => {
-  res.setTimeout(10000, () => {  // Set the timeout to 10 seconds
+  res.setTimeout(20000, () => {  // Set the timeout to 20 seconds
     console.log('Request timed out');
     res.status(504).send('Request timed out');
   });
