@@ -20,13 +20,13 @@ const corsOptions = {
 
 // Middleware to set Content Security Policy (CSP)
 app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'none'; script-src 'self' https://vercel.live; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:;"
-  );
-  next();
-});
-
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'none'; script-src 'self' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:;"
+    );
+    next();
+  });
+  
 app.use(cors(corsOptions));
 
 // Middleware
