@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
-import cors from 'cors';
 import connectDB from './config/db.js';
 import surveyRoutes from './routes/surveyroutes.js';
 
@@ -12,16 +11,20 @@ connectDB();
 
 const app = express();
 
-// Use cors package for CORS configuration
-app.use(cors({
-  origin: '*', // Set this to specific domains in production as needed
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
+
+// CORS Middleware - add this block directly in server.js
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);  // Handle preflight requests
+  }
+  next();
+});
 
 // Middleware to log requests (for debugging)
 app.use((req, res, next) => {
