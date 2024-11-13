@@ -10,27 +10,37 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// Middleware to handle request timeout
 app.use((req, res, next) => {
-    res.setTimeout(10000, () => {  // Set the timeout to 10 seconds
-      console.log('Request timed out');
-      res.status(504).send('Request timed out');
-    });
-    next();
+  res.setTimeout(10000, () => {  // Set the timeout to 10 seconds
+    console.log('Request timed out');
+    res.status(504).send('Request timed out');
   });
-  
+  next();
+});
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json());
 
-// CORS Middleware - add this block directly in server.js
+// CORS Middleware - improve the CORS configuration
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  const allowedOrigins = ['http://localhost:3000', 'https://questionnaire-app-iota.vercel.app'];  // Add your production URL here
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);  // Set allowed origin dynamically
+  }
+
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Credentials', 'true');  // Allow credentials to be sent with requests
+
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);  // Handle preflight requests
+    return res.sendStatus(200);  // Send OK for OPTIONS request
   }
+  
   next();
 });
 
