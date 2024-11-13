@@ -48,7 +48,7 @@ app.use((req, res, next) => {
 });
 
 // Middleware to parse JSON requests
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 
 // API Routes
 app.use('/api', surveyRoutes);

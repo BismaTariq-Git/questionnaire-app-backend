@@ -1,4 +1,6 @@
 import express from 'express';
+import cors from 'cors';
+
 import { createOrUpdateSurvey, getSurvey, finalizeSurvey, } from '../controllers/surveyControllers.js';  // Correct import
 
 
