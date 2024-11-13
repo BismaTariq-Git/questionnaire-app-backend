@@ -4,6 +4,11 @@ import { createOrUpdateSurvey, getSurvey, finalizeSurvey, } from '../controllers
 
 const router = express.Router();
 
+router.options('/survey', cors());
+router.options('/survey/progress', cors());
+router.options('/survey/submit-survey', cors());
+
+
 
 router.post('/survey', createOrUpdateSurvey);
 
