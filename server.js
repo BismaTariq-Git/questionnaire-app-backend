@@ -33,19 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Content Security Policy (CSP) Middleware
-app.use((req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; " +
-    "script-src 'self' https://vercel.live https://cdnjs.cloudflare.com; " +
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-    "img-src 'self' data: https://images.unsplash.com; " +
-    "font-src 'self' https://fonts.gstatic.com; " +
-    "connect-src 'self' https://questionnaire-app-backend.vercel.app;"
-  );
-  next();
-});
+
 
 // Middleware to parse JSON requests
 app.use(bodyParser.json())
