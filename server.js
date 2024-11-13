@@ -35,6 +35,11 @@ app.use(bodyParser.json());
 // Routes
 app.use('/api', surveyRoutes);
 
+// Default route for root URL
+app.get('/', (req, res) => {
+  res.send('Server is up and running!');
+});
+
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
