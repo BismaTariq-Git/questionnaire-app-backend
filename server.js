@@ -13,7 +13,7 @@ const app = express();
 
 // Middleware to handle request timeout
 app.use((req, res, next) => {
-  res.setTimeout(20000, () => {  // Set timeout to 20 seconds
+  res.setTimeout(20000, () => {  // Set the timeout to 20 seconds
     console.log('Request timed out');
     res.status(504).send('Request timed out');
   });
@@ -27,20 +27,20 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
   const allowedOrigins = ['http://localhost:3000', 'https://questionnaire-app-iota.vercel.app'];  // Add your production URL here
   const origin = req.headers.origin;
-
+  
   if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);  // Dynamically set the allowed origin
+    res.header('Access-Control-Allow-Origin', origin);  // Set allowed origin dynamically
   }
 
   res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');  // Allow credentials with requests
+  res.header('Access-Control-Allow-Credentials', 'true');  // Allow credentials to be sent with requests
 
-  // Handle preflight requests for CORS
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);  // Send OK for OPTIONS request
   }
-
+  
   next();
 });
 
@@ -57,13 +57,8 @@ app.get('/', (req, res) => {
   res.send('Server is up and running!');
 });
 
-// Start server (for local environments)
+// Start server
 const PORT = process.env.PORT || 5001;
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-} else {
-  // Vercel or production environment will use serverless functions (no need for app.listen())
-  console.log('Server running in production (serverless mode)');
-}
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
