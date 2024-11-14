@@ -59,7 +59,7 @@ export const finalizeSurvey = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(500).json({ error: "Failed to finalize survey" });
+    res.status(500).json({ error: err });
   }
 };
 
