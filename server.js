@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware to log requests (for debugging)
+
 app.use((req, res, next) => {
   console.log(`${req.method} request to ${req.url}`);
   next();
