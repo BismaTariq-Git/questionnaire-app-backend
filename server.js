@@ -25,24 +25,15 @@ app.use(bodyParser.json());
 
 // CORS Middleware - improve the CORS configuration
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:3000', 'https://questionnaire-app-iota.vercel.app'];  // Add your production URL here
-  const origin = req.headers.origin;
+    res.header('Access-Control-Allow-Origin', '*');  // Allow all origins
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);  // Send OK for OPTIONS request
+    }
   
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);  // Set allowed origin dynamically
-  }
-
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');  // Allow credentials to be sent with requests
-
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);  // Send OK for OPTIONS request
-  }
-  
-  next();
-});
+    next();
+  });
 
 
 app.use((req, res, next) => {
